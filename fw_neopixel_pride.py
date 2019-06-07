@@ -173,9 +173,10 @@ def slide_in_animation(the_pattern, color_map, animation_speed=ANIMATION_SPEED):
 # Main execution loop
 ############################################################################
 
-for pattern_name, pattern_data in patterns.items():
-    print("Rendering flag: {0}".format(pattern_name))
-    the_pattern = pattern_data['pattern']
-    color_map   = pattern_data['colors']
-    slide_in_animation(the_pattern, color_map)
-    sleep(SHOW_PATTERN_DELAY)
+if __name__=="__main__":
+    for pattern_name, pattern_data in patterns.items():
+        print("Rendering flag: {0}".format(pattern_name))
+        the_pattern = pattern_data['pattern']
+        color_map   = pattern_data['colors']
+        slide_in_animation(the_pattern, color_map)
+        sleep(SHOW_PATTERN_DELAY)
