@@ -24,20 +24,17 @@ SHOW_PATTERN_DELAY = 15
 # more current.
 PATTERN_INTENSITY  = 0.3
 
-# Board pin to which the NeoPixel is connected
-neopixel_pin = None
-
-# The NeoPixel object controlling the pixels.
-pixels = None
-
 # The number of rows in the NeoPixel grid.
 NUM_ROWS = 4
 
 # The number of columns in the NeoPixel grid.
 NUM_COLS = 8
 
-# The brightness (0-1) for the NeoPixels
-BRIGHTNESS = 0.3
+# Board pin to which the NeoPixel is connected
+neopixel_pin = None
+
+# The NeoPixel object controlling the pixels.
+pixels = None
 
 # Do the hardware setup if we're running on CircuitPython.
 if sys.implementation.name == "circuitpython":
@@ -48,7 +45,7 @@ if sys.implementation.name == "circuitpython":
     # Control pin defaults to #6
     neopixel_pin = board.D6
     pixels = neopixel.NeoPixel(neopixel_pin, (NUM_ROWS * NUM_COLS),
-                               brightness=BRIGHTNESS, auto_write=False)
+                               brightness=PATTERN_INTENSITY, auto_write=False)
 
 ############################################################################
 # Define all of the flag color palettes
@@ -137,7 +134,7 @@ def set_column(display_column, rgb_value):
     :rtype: None
     """
     print('Called set_column({0}, {1})'.format(display_column, rgb_value))
-    if not pixels == None:
+    if pixels is not None:
         for i in range(0, NUM_ROWS):
             which_pixel = (i * NUM_COLS) + display_column
             pixels[which_pixel] = rgb_value
