@@ -14,7 +14,7 @@ If you just want to build one of these and run it, here's the quickstart:
 
 1. Get all the parts in the [parts list](#Parts-List).
 2. Stack the [NeoPixel Featherwing] and the [Feather M0 Express].
-3. Download the code. Copy the code file `fw_neopixel_matrix.py` to the 
+3. Download the code. Copy the code file `fw_neopixel_pride.py` to the 
 Feather, and rename it `code.py`.
 4. Power up your Feather and go to the races.
 
