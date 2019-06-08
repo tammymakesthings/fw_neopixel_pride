@@ -28,22 +28,27 @@ PATTERN_INTENSITY  = 0.3
 neopixel_pin = None
 
 # The NeoPixel object controlling the pixels.
-pixels       = None
+pixels = None
 
 # The number of rows in the NeoPixel grid.
-NUM_ROWS     = 4
+NUM_ROWS = 4
 
 # The number of columns in the NeoPixel grid.
-NUM_COLS     = 8
+NUM_COLS = 8
+
+# The brightness (0-1) for the NeoPixels
+BRIGHTNESS = 0.3
 
 # Do the hardware setup if we're running on CircuitPython.
 if sys.implementation.name == "circuitpython":
     import time
     import board
     import neopixel
-    
-    neopixel_pin = Board.A6
-    pixels       = neopixel.NeoPixel(pixel_pin, (NUM_ROWS * NUM_COLS), brightness=0.3, auto_write=False)
+
+    # Control pin defaults to #6
+    neopixel_pin = board.D6
+    pixels = neopixel.NeoPixel(neopixel_pin, (NUM_ROWS * NUM_COLS),
+                               brightness=BRIGHTNESS, auto_write=False)
 
 ############################################################################
 # Define all of the flag color palettes
@@ -54,16 +59,16 @@ flag_colors = {
         
         # LGBT Flag
         'A': (231, 0,   0),     # Electric Red
-        'B': (255, 140, 0),     # Dark Orange
+        'B': (224, 89,  17),     # Dark Orange
         'C': (255, 239, 0),     # Canary Yellow
         'D': (0,   129, 31),    # La Salle Green
         'E': (0,   68,  255),   # Blue (RYB)
         'F': (118, 0,   137),   # Patriarch
 
         # Trans Flag
-        'G': (85,  205, 252),   # Maya Blue
+        'G': (65,  175, 222),   # Maya Blue
         'H': (255, 255, 255),   # White
-        'I': (247, 168, 184),   # Amaranth Pink
+        'I': (217, 148, 144),   # Amaranth Pink
 
         # Bi Pride Flag
         'J': (215, 2,   112),   # Magenta
@@ -71,9 +76,9 @@ flag_colors = {
         'L': (0,   56,  168),   # Royal
         
         # Nonbinary Flag
-        'M': (255, 244, 51),    # Yellow
-        'N': (255, 255, 255),   # White
-        'O': (155, 89,  208),    # Lavender
+        'M': (255, 239, 0),    # Yellow
+        'N': (230, 230, 230),   # White
+        'O': (255, 20, 140),    # Lavender
 
         # Pansexual Flag
         'P': (255, 20, 140),    # Deep Pink
@@ -89,7 +94,7 @@ flag_colors = {
 
 patterns = {
         'pride_flag': {'pattern': '-ABCDEF-', 'colors': flag_colors},
-        'trans_flag': {'pattern': '--GHIHG-', 'colors': flag_colors},
+        'trans_flag': {'pattern': '-JKLKJ--', 'colors': flag_colors},
         'bi_flag'   : {'pattern': '--JJKLL-', 'colors': flag_colors},
         'nb_flag'   : {'pattern': 'MMNNOO--', 'colors': flag_colors},
         'pan_flag'  : {'pattern': '-PPQQRR-', 'colors': flag_colors},
@@ -98,6 +103,7 @@ patterns = {
 ############################################################################
 # Helper functions
 ############################################################################
+
 
 def clear_pixels(rows=NUM_ROWS, cols=NUM_COLS):
     """
@@ -113,11 +119,12 @@ def clear_pixels(rows=NUM_ROWS, cols=NUM_COLS):
     :param cols: number of cols in the array (defaults to value of NUM_COLS)
     :rtype: None
     """
-    if not pixels == None:
-        for i in range(0, (rows * cols)):
-            pixels[i] = (0, 0, 0)
+    print("inside clearPixels({0}, {1})".format(rows, cols))
+    if pixels is not None:
+        pixels.fill(0, 0, 0)
         pixels.show()
-            
+
+
 def set_column(display_column, rgb_value):
     """
     .. function:: set_column(display_column, rgb_value)
@@ -134,7 +141,8 @@ def set_column(display_column, rgb_value):
         for i in range(0, NUM_ROWS):
             which_pixel = (i * NUM_COLS) + display_column
             pixels[which_pixel] = rgb_value
-        
+
+
 def slide_in_animation(the_pattern, color_map, animation_speed=ANIMATION_SPEED):
     """
     .. function:: slide_in_animation(the_pattern, color_map, animation_speed)
@@ -151,6 +159,7 @@ def slide_in_animation(the_pattern, color_map, animation_speed=ANIMATION_SPEED):
     the animation.
     :rtype: None
     """
+    print("inside slideInAnimation({0}, {1}, {2})".format(the_pattern, color_map, animation_speed))
     for i in range(0, len(the_pattern)):
         starting_column = len(the_pattern) - i - 1
         ending_column = len(the_pattern)
@@ -169,14 +178,20 @@ def slide_in_animation(the_pattern, color_map, animation_speed=ANIMATION_SPEED):
             pixels.show()
         sleep(animation_speed)
 
+
+def renderAllPatterns(the_patterns):
+    for pattern_name, pattern_data in the_patterns.items():
+        print("renderAllPatterns(): rendering flag: {0}".format(pattern_name))
+        the_pattern = pattern_data['pattern']
+        color_map   = pattern_data['colors']
+        slide_in_animation(the_pattern, color_map)
+        sleep(SHOW_PATTERN_DELAY)
+
+
 ############################################################################
 # Main execution loop
 ############################################################################
 
 if __name__=="__main__":
-    for pattern_name, pattern_data in patterns.items():
-        print("Rendering flag: {0}".format(pattern_name))
-        the_pattern = pattern_data['pattern']
-        color_map   = pattern_data['colors']
-        slide_in_animation(the_pattern, color_map)
-        sleep(SHOW_PATTERN_DELAY)
+    while True:
+        renderAllPatterns(patterns)
