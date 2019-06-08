@@ -2,7 +2,7 @@
 
 ## What Is It?
 
-![LGBT Rainbow Pride Flag](images/rainbow_flag.png)
+![LGBT Rainbow Pride Flag](images/badge_running_1.jpg)
 
 June is LGBTQ Pride Month. Celebrate your pride with this fun, animated piece
 of electronic jewelry!
